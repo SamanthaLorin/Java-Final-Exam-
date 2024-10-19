@@ -1,0 +1,23 @@
+package com.mycompany.finalexamination;
+import java.util.ArrayList;
+
+class Cart {
+    private ArrayList<String> items = new ArrayList<>();
+
+    public void addItem(MenuItem item, int qty) {
+        items.add(qty + "x " + item.getName() + " @ " + item.getPrice());
+        System.out.println("Added to cart!");
+    }
+
+    public void displayCart() {
+        System.out.println("\n--- Your Cart ---");
+        if (items.isEmpty()) {
+            System.out.println("Cart is empty.");
+        } else {
+            for (String item : items) {
+                System.out.println(item);
+            }
+        }
+         
+    }
+}
