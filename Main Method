@@ -1,0 +1,165 @@
+package com.mycompany.finalexamination;
+import java.util.Scanner;
+
+public class FinalExamination {
+
+    public static void main(String[] args) {
+        
+        Scanner input = new Scanner(System.in);
+        System.out.println("\n \n***********************************************************");
+        System.out.println("\t\tWelcome to MCBytes Restaurant");
+        System.out.println("***********************************************************");
+        
+        //call cart, main menu
+        Cart cart = new Cart();
+        MainMenu(cart);
+        
+    }
+        // TO DISPLAY MAIN MENU 
+        public static void MainMenu(Cart cart) {
+        Scanner input = new Scanner(System.in);    
+        System.out.println("\n[1] View Menu");
+        System.out.println("[2] View Cart");
+        System.out.println("[3] Exit");
+        
+        System.out.print("\nChoose your option: ");
+        int option = input.nextInt();
+        
+         switch (option) {
+            case 1:
+                ViewMenuCategories(cart);
+                break;
+            case 2:
+                cart.displayCart();
+                MainMenu(cart);
+                break;
+            case 3:
+                System.out.println("Thank you for choosing McBytes!");
+                break;
+            default:
+                System.out.println("The option you chose is invalid");
+                MainMenu(cart);
+        }}
+        
+        public static void ViewMenuCategories(Cart cart) {
+        Scanner input = new Scanner(System.in);     
+        System.out.println("\n--- Choose an option ---");
+        System.out.println("[1] Rice Meals");
+        System.out.println("[2] Burger");
+        System.out.println("[3] Beverages");
+        System.out.println("[4] Sides & Desserts");
+
+        System.out.print("\nChoose your category: ");
+        int category = input.nextInt();
+
+        switch (category) {
+            case 1:
+                displayRiceMeals(cart);
+                break;
+            case 2:
+                displayBurgers(cart);
+                break;
+            case 3:
+                displayBeverages(cart);
+                break;
+            case 4:
+                displaySidesAndDesserts(cart);
+                break;
+            default:
+                System.out.println("Invalid category.");
+                ViewMenuCategories(cart);
+        }
+    }
+        
+        // DISPLAY RICE MEALS OPTION
+        public static void displayRiceMeals(Cart cart) {
+        Scanner input = new Scanner(System.in);    
+        MenuItem[] riceMeals = {
+            new MenuItem("Fish & Rice Meal", 212.00),
+            new MenuItem("Spicy Chicken & Rice", 179.00),
+            new MenuItem("1-pc Chicken & Rice", 179.00),
+            new MenuItem("Mushroom Steak & Rice", 160.00)
+        };
+        
+        displayMenuItems(cart, riceMeals);
+    }
+        
+        // DISPLAY BURGERS OPTION
+        public static void displayBurgers(Cart cart) {
+        Scanner input = new Scanner(System.in);    
+        MenuItem[] burgers = {
+            new MenuItem("Cheesy Burger", 160.00),
+            new MenuItem("Spicy Fillet Burger", 220.00),
+            new MenuItem("Crispy Chicken Sandwich with Lettuce & Tomatoes Meal", 166.00),
+            new MenuItem("Quarter Pounder with Cheese, Lettuce & Tomatoes Meal", 271.00)
+        };
+        
+        displayMenuItems(cart, burgers);
+    }
+        
+        // DISPLAY BEVERAGES 
+        public static void displayBeverages(Cart cart) {
+                
+        MenuItem[] beverages = {
+            new MenuItem("Water in a bottle", 20.00),
+            new MenuItem("Coke in can", 35.00),
+            new MenuItem("Sprite", 35.00),
+            new MenuItem("Pepsi", 35.00),
+            new MenuItem("Iced Coffee", 55.00),
+            new MenuItem("Iced Caramel Coffee", 65.00)
+        };
+        
+        displayMenuItems(cart, beverages);
+    }
+         
+        // DISPLAY SIDES AND DESSERTS OPTION
+        public static void displaySidesAndDesserts(Cart cart) {
+        MenuItem[] sidesAndDesserts = {
+            new MenuItem("Hashbrown", 37.00),
+            new MenuItem("4pcs. Chicken Nuggets", 147.00),
+            new MenuItem("10pcs. Chicken Nuggets", 210.00),
+            new MenuItem("Sundae - Vanilla", 43.00),
+            new MenuItem("Sundae - Chocolate", 43.00),
+            new MenuItem("Sundae - Strawberry", 43.00),
+            new MenuItem("Sundae - Caramel", 43.00),
+            new MenuItem("Apple Pie", 43.00)
+        };
+        
+        displayMenuItems(cart, sidesAndDesserts);
+    }
+        
+        // TO LET THE USER CHOOSE A MEAL & TO ENTER A QUANTITY 
+        public static void displayMenuItems(Cart cart, MenuItem[] items) {
+        Scanner input = new Scanner(System.in);       
+        System.out.println("\n--- Menu ---");
+        for (int i = 0; i < items.length; i++) {
+            System.out.println("[" + (i + 1) + "] " + items[i]);
+        }
+
+        System.out.println("[5] Go Back to Categories"); 
+
+        System.out.print("Choose your meal or go back: ");
+        int choice = input.nextInt();
+
+        if (choice >= 1 && choice <= items.length) {
+            System.out.print("Enter quantity: ");
+            int qty = input.nextInt();
+            cart.addItem(items[choice - 1], qty);
+        } else if (choice == 5) {
+            ViewMenuCategories(cart);  
+        } else {
+            System.out.println("Invalid choice.");
+        }
+
+        MainMenu(cart);  
+
+    }
+}
+
+
+    
+
+
+
+    
+
