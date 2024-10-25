@@ -1,0 +1,47 @@
+// ITO PO AY KADUGTONG NI LOGIN(MAIN METHOD) ITO YUNG CLASS NIYA 
+package com.mycompany.login;
+
+public class Registration {
+  // ginawa ko siyang private kasi nageerror pag string lang, ayaw din niya sa static edi ayan private. 
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String pass;
+    private String phoneNumber;
+    private String address;
+
+        // basta. 
+        public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String Address) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.pass = password;
+            this.phoneNumber = phoneNumber;
+            this.address = address;
+    }
+    
+      public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return pass;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+}
