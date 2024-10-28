@@ -1,16 +1,17 @@
-// ITO PO AY KADUGTONG NI LOGIN(MAIN METHOD) ITO YUNG CLASS NIYA 
-package com.mycompany.login;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.finalexamination;
 
+/**
+ *
+ * @author Samantha Lorin
+ */
 public class Registration {
-  // ginawa ko siyang private kasi nageerror pag string lang, ayaw din niya sa static edi ayan private. 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String pass;
-    private String phoneNumber;
-    private String address;
+    private String firstName, lastName, email, pass, phoneNumber, address;
 
-        // basta. 
+    
         public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String Address) {
             this.firstName = firstName;
             this.lastName = lastName;
@@ -45,3 +46,4 @@ public class Registration {
     }
     
 }
+
