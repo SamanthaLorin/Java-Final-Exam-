@@ -1,23 +1,166 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.finalexamination;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Samantha Lorin
+ */
+
 
 class Cart {
-    private ArrayList<String> items = new ArrayList<>();
+   private ArrayList<String> items = new ArrayList<>();
+   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // To keep track of item details
+   private ArrayList<Integer> itemQty = new ArrayList<>();
+   private Scanner input = new Scanner(System.in); 
+   static double grandTotal = 0.0;
+   static int removeItems;
+    
+   public void addItem(MenuItem item, int qty) {
+       double productPrice = qty * item.getPrice();
+       grandTotal += productPrice;
 
-    public void addItem(MenuItem item, int qty) {
-        items.add(qty + "x " + item.getName() + " @ " + item.getPrice());
-        System.out.println("Added to cart!");
-    }
-
-    public void displayCart() {
-        System.out.println("\n--- Your Cart ---");
-        if (items.isEmpty()) {
-            System.out.println("Cart is empty.");
-        } else {
-            for (String item : items) {
-                System.out.println(item);
+       itemQty.add(qty);
+       menuItems.add(item); // Add item to menuItems list
+       items.add(qty + "x " + item.getName() + "\t@" + item.getPrice() + "\t\t" + productPrice);
+       System.out.println("Added to cart!");
+   }
+    
+   public void displayCart() {
+       System.out.println("\n--- Your Cart ---");
+       if (items.isEmpty()) {
+           System.out.println("Cart is empty.");
+       } else {
+           System.out.println("Qty and Product \t Unit \t Total");
+           for(int i = 0; i < items.size(); i++){       
+               System.out.println("[" + i + "]. "+ items.get(i));
+           }
+           FinalExamination.chooseActionInCart(this);
+       }
+   }
+    
+   
+       public void removeItem(){
+ 
+        System.out.print("\nWould you like to remove an item? (y/n): ");
+        String readRemove = input.nextLine();
+        char boolRemove = readRemove.charAt(0);
+        
+        if(boolRemove == 'y' || boolRemove == 'Y'){
+            System.out.print("Select a number to remove (from 0 up to last number): ");
+            removeItems = input.nextInt();
+            input.nextLine();
+            
+            //condition to user input
+            if (removeItems >= 0 && removeItems < items.size()){
+                items.remove(removeItems);
+                //DISPLAY THIS once cart is empty
+                
+                if(items.isEmpty()){
+                    System.out.println("Your cart is empty! ");
+                } else {
+                    displayCart();                
+                }
+            } else {
+                System.out.println("Invalid. Try again.");
+                removeItem();
             }
+        }else if(boolRemove == 'n' || boolRemove == 'N'){
+            //dapat babalik sa choose action
+           //checkOutItem();
+            FinalExamination.chooseActionInCart(this);
+        } else {
+            System.out.println("Invalid!");
         }
-         
+
     }
+ 
+   public void editItem(){
+       System.out.println("---NOTE: This can only edit quantity.---");
+       System.out.print("Enter index of the item you'd like to edit (0 to " + (items.size() - 1) + "): ");
+       int editIndexItem = input.nextInt();
+        
+       if(editIndexItem >= 0 && editIndexItem < items.size()){
+           System.out.print("Enter the new quantity");
+           int editQty = input.nextInt();   
+           
+           // Update grandTotal with the new price after adjusting quantity
+           double oldProductPrice = itemQty.get(editIndexItem) * menuItems.get(editIndexItem).getPrice();
+           double newProductPrice = editQty * menuItems.get(editIndexItem).getPrice();
+           grandTotal += (newProductPrice - oldProductPrice);
+           
+           itemQty.set(editIndexItem, editQty);
+           String updatedItem = editQty + "x " + menuItems.get(editIndexItem).getName() 
+               + "\t@" + menuItems.get(editIndexItem).getPrice() 
+               + "\t\t" + newProductPrice;
+           items.set(editIndexItem, updatedItem);
+           System.out.println("Updated Cart: " + items);
+       } else {
+           System.out.println("Invalid index. Try again.");
+           editItem();
+       }
+   }
+    
+   public void confirmCart(){
+       System.out.println("Product \t\t\t Price");
+       for (String itemList : items) {
+           System.out.println(itemList);
+       }
+   }
+    
+   public void receipt(){
+       System.out.println("***************************************************");
+       System.out.println("\n\t\tMCBytes Restaurant");
+       System.out.println("\n***************************************************");
+        
+       System.out.println("User's name: " + Registration.getFirstName());
+       System.out.println("Address:" + );
+       System.out.println("Number: "+ );
+        
+       confirmCart();
+       System.out.println("***************************************************");
+       //System.out.println("Total: " + grandTotal); 
+       //vat - 0.12 x price
+       //grandTotal = vat + 
+       
+       double vat = grandTotal * 0.12;
+       double finalTotal = grandTotal + vat;
+
+       // Print the totals
+       System.out.printf("Total:\t\t%.2f\n", grandTotal);
+       System.out.printf("VAT (12%%):\t%.2f\n", vat);
+       System.out.printf("Grand Total:\t%.2f\n", finalTotal);
+
+       System.out.println("***************************************************");
+       System.out.println("\t\t\tThank you for dining with us!");
+   }
+
+   public void checkOutItem(){
+       System.out.print("Would you like to check out the items? ");
+       String readOrder = input.nextLine();
+       char boolOrder = readOrder.charAt(0);
+        
+       if(boolOrder == 'y' || boolOrder == 'Y'){
+           System.out.println("\n--Confirm your order--");
+            
+           System.out.print("Would you like to buy the items? (y/n) ");
+           char buyItem = input.next().charAt(0);
+            
+           if(buyItem == 'y' || buyItem == 'Y'){
+               System.out.println("\nHere's your buy list!\n");
+               confirmCart();
+               receipt();
+           } else {
+               System.out.println("Invalid Option!");
+           }
+       } else if (boolOrder == 'n' || boolOrder == 'N'){
+           FinalExamination.MainMenu(this);
+       } else {
+           System.out.println("Invalid option!");
+       }
+   }
 }
