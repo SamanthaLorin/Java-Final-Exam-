@@ -1,6 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.finalexamination;
+
+/**
+ *
+ * @author Samantha Lorin
+ */
 public class MenuItem {
-    private String name;
-    private double price;
+    String name;
+    double price;
 
     public MenuItem(String name, double price) {
         this.name = name;
@@ -18,4 +28,7 @@ public class MenuItem {
     public String getName() {
         return name;
     }
+    
+    
+    
 }
