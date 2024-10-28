@@ -1,11 +1,143 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
 package com.mycompany.finalexamination;
 import java.util.Scanner;
-
+import java.util.ArrayList;
+/**
+ *
+ * @author Samantha Lorin
+ */
 public class FinalExamination {
+    
+static ArrayList<Registration> users = new ArrayList<>();
 
+    // MAIN METHOD 
     public static void main(String[] args) {
-        
         Scanner input = new Scanner(System.in);
+        
+        System.out.println("\n \n***********************************************************");
+        System.out.println("\t\tWelcome to MCBytes Restaurant");
+        System.out.println("***********************************************************");
+        Open();
+        
+}
+   
+        // open() - ito yung unang makikita ni user bago yung menu.
+        // need niya muna mag login/sign up bago makapasok sa system. 
+        public static void Open() {
+        Scanner input = new Scanner(System.in);    
+        
+        System.out.println("[1] Login");
+        System.out.println("[2] Sign up");
+        
+        System.out.print("\nSelect an Option: ");
+        int login_signup = input.nextInt();
+        
+        switch (login_signup) {
+            case 1: 
+                System.out.println("Login your account. Please fill in the information below");
+                login();
+                break;
+            case 2: 
+                System.out.println("Sign Up!");
+                signUp();
+                break;
+            default:
+                System.out.println("You chose an invalid option. Please choose between 1 and 2.");    
+                Open(); 
+        }
+    }
+        
+        // Guys, sign up to guys. Sign-up. 
+        public static void signUp() {
+        Scanner input = new Scanner(System.in); 
+        String fname, lname, email, pass, address, pnumber;
+        
+        System.out.println("\nUSER DETAILS: ");
+        
+        System.out.print("First Name: ");
+        fname = input.nextLine();
+        
+        System.out.print("Last Name: ");
+        lname = input.nextLine();
+        
+        System.out.println("\nLOGIN AND CONTACT DETAILS: ");
+        
+        System.out.print("Email: ");
+        email = input.nextLine();
+        
+        System.out.print("Password: ");
+        pass = input.nextLine(); 
+        
+        System.out.print("Phone Number: ");
+        pnumber = input.nextLine();
+        
+        System.out.print("Address: ");
+        address = input.nextLine();
+        
+        
+        
+        if (users.contains(email)) {
+            System.out.println("\nThis account is already registered. Please try logging in.");
+            Open();
+            return;
+        }
+        
+        // PARA MAKAPAG REGISTER ULIT SI USER (arraylist = add)
+        Registration newUser = new Registration(fname, lname, email, pass, pnumber, address);
+        users.add(newUser);
+                
+        
+        System.out.println("\nSign up Successful! You can now log in.");
+        Open(); 
+    }
+        
+        
+    
+        public static void login(){
+           Scanner input = new Scanner(System.in);
+        
+        System.out.print("Email: ");
+        String email = input.nextLine();
+        
+        System.out.print("Password: ");
+        String password = input.nextLine();  
+        
+        // ginaya ko lang yung sa ppt ni sir + pinadebug kay blackbox kasi ayaw niya ng .contains
+        Registration user = null;
+        for (Registration signup : users) {
+         
+            if (signup.getEmail().equals(email)) {
+                user = signup;
+                break;
+            }
+        }
+        
+         //ito lalabas kapag wala pang account si user (mapupunta sa signup automatic)
+         // ano yung null? null = nothing, empty, waley laman
+        if (user == null) {
+        System.out.println("\nUser not found. Please try signing up.");
+        Open();
+        return;
+        }
+                
+        // ito lalabas after maglogin ni user. 
+         if (user.getPassword().equals(password)) {
+            System.out.println("\nLogin successful! Welcome, " + user.getFirstName() + "!");
+         } else {
+            System.out.println("\nIncorrect password. Try again.");
+            login();
+             
+         }
+        
+         OpenHomePage();
+        // AFTER NG LOGIN TSAKA SIGNUP
+        }
+        
+        
+    public static void OpenHomePage(){    
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
         System.out.println("***********************************************************");
@@ -35,7 +167,7 @@ public class FinalExamination {
                 break;
             case 3:
                 System.out.println("Thank you for choosing McBytes!");
-                break;
+                  System.exit(0);
             default:
                 System.out.println("The option you chose is invalid");
                 MainMenu(cart);
@@ -136,7 +268,7 @@ public class FinalExamination {
             System.out.println("[" + (i + 1) + "] " + items[i]);
         }
 
-        System.out.println("[5] Go Back to Categories"); 
+        System.out.println("[0] Go Back to Categories"); 
 
         System.out.print("Choose your meal or go back: ");
         int choice = input.nextInt();
@@ -145,15 +277,72 @@ public class FinalExamination {
             System.out.print("Enter quantity: ");
             int qty = input.nextInt();
             cart.addItem(items[choice - 1], qty);
-        } else if (choice == 5) {
+        } else if (choice == 0) {
             ViewMenuCategories(cart);  
         } else {
             System.out.println("Invalid choice.");
         }
 
         MainMenu(cart);  
+        }
+
+    public static void chooseActionInCart(Cart cart){
+        Scanner input = new Scanner(System.in);
+        System.out.println("\n[1] Edit my cart");
+        System.out.println("[2] Remove an item in my cart");
+        System.out.println("[3] Check-out");
+        System.out.println("[4] Go back");
+        
+        System.out.println("Choose an action: ");
+        char chooseInCart = input.next().charAt(0);
+        
+        switch(chooseInCart){
+            case '1':
+                cart.editItem();
+                break;
+            case '2':
+                cart.removeItem();
+                MainMenu(cart);
+                break;
+            case '3':
+                cart.checkOutItem();
+                break;
+            case '4':
+                MainMenu(cart);
+                break;
+        }
 
     }
+        
+        
+        /* MGA AAYUSIN
+        - GO BACK
+        - YUNG PRICE AND PRODUCT
+        - layout ng menu
+        
+        MGA GAGAWIN
+        - SEARCH
+        - LAGAY TOTAL NG PRICE KAPAG VINIEW YUNG CART (PER PRODUCT) check
+        - bakit nag error kapaag nagcancel mag bili tapos babalik //ewan
+        - ayus checkout validation //haha
+        - EDIT quantity
+        - SEARCH
+        - kapag nagremove dapat yung mga tototal is yung existing nalang
+        - error yung validation kasi
+        - total of items
+        
+        - hindi na didisplay
+        - gawa ng validation is empty sa mga remove check-out kineme
+    
+    
+    
+        - SA EDIT check
+    - dapat naka println check
+    
+    - total of items
+        
+        */
+        
 }
 
 
