@@ -11,18 +11,14 @@ import java.util.Scanner;
  * @author Samantha Lorin
  */
 
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
 class Cart {
    
    public Registration registration;
    
    private ArrayList<String> items = new ArrayList<>();
-   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // list of all items from the menu item
+   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // list ng mga items from the menu item
    private ArrayList<Integer> itemQty = new ArrayList<>(); 
-   private ArrayList<ArrayList<String>> orderHistory = new ArrayList<>(); // list of all past receipts
+   private ArrayList<ArrayList<String>> orderHistory = new ArrayList<>(); // list of past receipts
    private ArrayList <Double> itemPrice = new ArrayList<>(); //list of price that the user added to cart
    
    private Scanner input = new Scanner(System.in); 
