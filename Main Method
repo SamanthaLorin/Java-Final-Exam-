@@ -1,21 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 
-package com.mycompany.finalexamination;
 import java.util.Scanner;
 import java.util.ArrayList;
-/**
- *
- * @author Samantha Lorin
- */
+
 public class FinalExamination {
-    
+  
 static ArrayList<Registration> users = new ArrayList<>();
 
     // MAIN METHOD 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
         
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
@@ -27,8 +19,8 @@ static ArrayList<Registration> users = new ArrayList<>();
         // open() - ito yung unang makikita ni user bago yung menu.
         // need niya muna mag login/sign up bago makapasok sa system. 
         public static void Open() {
-        Scanner input = new Scanner(System.in);    
-        
+        Scanner input = new Scanner(System.in);
+
         System.out.println("[1] Login");
         System.out.println("[2] Sign up");
         
@@ -89,15 +81,13 @@ static ArrayList<Registration> users = new ArrayList<>();
         Registration newUser = new Registration(fname, lname, email, pass, pnumber, address);
         users.add(newUser);
                 
-        
         System.out.println("\nSign up Successful! You can now log in.");
         Open(); 
+        
     }
         
-        
-    
-        public static void login(){
-           Scanner input = new Scanner(System.in);
+    public static void login(){
+        Scanner input = new Scanner(System.in);
         
         System.out.print("Email: ");
         String email = input.nextLine();
@@ -132,27 +122,28 @@ static ArrayList<Registration> users = new ArrayList<>();
              
          }
         
-         OpenHomePage();
+         OpenHomePage(user);
         // AFTER NG LOGIN TSAKA SIGNUP
         }
         
         
-    public static void OpenHomePage(){    
+    public static void OpenHomePage(Registration user){    
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
         System.out.println("***********************************************************");
         
         //call cart, main menu
-        Cart cart = new Cart();
+        Cart cart = new Cart(user);
         MainMenu(cart);
         
     }
         // TO DISPLAY MAIN MENU 
         public static void MainMenu(Cart cart) {
-        Scanner input = new Scanner(System.in);    
+        Scanner input = new Scanner(System.in);
         System.out.println("\n[1] View Menu");
         System.out.println("[2] View Cart");
-        System.out.println("[3] Exit");
+        System.out.println("[3] View My Orders");
+        System.out.println("[4] Exit");
         
         System.out.print("\nChoose your option: ");
         int option = input.nextInt();
@@ -166,15 +157,20 @@ static ArrayList<Registration> users = new ArrayList<>();
                 MainMenu(cart);
                 break;
             case 3:
+                cart.myOrders();
+                MainMenu(cart);
+                break;
+            case 4:
                 System.out.println("Thank you for choosing McBytes!");
-                  System.exit(0);
+                System.exit(0);
             default:
                 System.out.println("The option you chose is invalid");
                 MainMenu(cart);
         }}
         
         public static void ViewMenuCategories(Cart cart) {
-        Scanner input = new Scanner(System.in);     
+        Scanner input = new Scanner(System.in);
+
         System.out.println("\n--- Choose an option ---");
         System.out.println("[1] Rice Meals");
         System.out.println("[2] Burger");
@@ -205,7 +201,6 @@ static ArrayList<Registration> users = new ArrayList<>();
         
         // DISPLAY RICE MEALS OPTION
         public static void displayRiceMeals(Cart cart) {
-        Scanner input = new Scanner(System.in);    
         MenuItem[] riceMeals = {
             new MenuItem("Fish & Rice Meal", 212.00),
             new MenuItem("Spicy Chicken & Rice", 179.00),
@@ -218,7 +213,6 @@ static ArrayList<Registration> users = new ArrayList<>();
         
         // DISPLAY BURGERS OPTION
         public static void displayBurgers(Cart cart) {
-        Scanner input = new Scanner(System.in);    
         MenuItem[] burgers = {
             new MenuItem("Cheesy Burger", 160.00),
             new MenuItem("Spicy Fillet Burger", 220.00),
@@ -262,7 +256,8 @@ static ArrayList<Registration> users = new ArrayList<>();
         
         // TO LET THE USER CHOOSE A MEAL & TO ENTER A QUANTITY 
         public static void displayMenuItems(Cart cart, MenuItem[] items) {
-        Scanner input = new Scanner(System.in);       
+        Scanner input = new Scanner(System.in);
+
         System.out.println("\n--- Menu ---");
         for (int i = 0; i < items.length; i++) {
             System.out.println("[" + (i + 1) + "] " + items[i]);
@@ -288,67 +283,34 @@ static ArrayList<Registration> users = new ArrayList<>();
 
     public static void chooseActionInCart(Cart cart){
         Scanner input = new Scanner(System.in);
+
         System.out.println("\n[1] Edit my cart");
         System.out.println("[2] Remove an item in my cart");
-        System.out.println("[3] Check-out");
+        System.out.println("[3] Check out"); 
         System.out.println("[4] Go back");
         
-        System.out.println("Choose an action: ");
-        char chooseInCart = input.next().charAt(0);
+        System.out.print("\nChoose an action: ");
+        int chooseInCart = input.nextInt();
         
         switch(chooseInCart){
-            case '1':
+            case 1:
                 cart.editItem();
                 break;
-            case '2':
+            case 2:
                 cart.removeItem();
                 MainMenu(cart);
                 break;
-            case '3':
+            case 3:
                 cart.checkOutItem();
                 break;
-            case '4':
+            case 4:
                 MainMenu(cart);
                 break;
         }
 
     }
-        
-        
-        /* MGA AAYUSIN
-        - GO BACK
-        - YUNG PRICE AND PRODUCT
-        - layout ng menu
-        
-        MGA GAGAWIN
-        - SEARCH
-        - LAGAY TOTAL NG PRICE KAPAG VINIEW YUNG CART (PER PRODUCT) check
-        - bakit nag error kapaag nagcancel mag bili tapos babalik //ewan
-        - ayus checkout validation //haha
-        - EDIT quantity
-        - SEARCH
-        - kapag nagremove dapat yung mga tototal is yung existing nalang
-        - error yung validation kasi
-        - total of items
-        
-        - hindi na didisplay
-        - gawa ng validation is empty sa mga remove check-out kineme
-    
-    
-    
-        - SA EDIT check
-    - dapat naka println check
-    
-    - total of items
-        
-        */
-        
+
 }
 
 
     
-
-
-
-    
-
