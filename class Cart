@@ -12,26 +12,44 @@ import java.util.Scanner;
  */
 
 
-class Cart {
-   private ArrayList<String> items = new ArrayList<>();
-   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // To keep track of item details
-   private ArrayList<Integer> itemQty = new ArrayList<>();
-   private Scanner input = new Scanner(System.in); 
-   static double grandTotal = 0.0;
-   static int removeItems;
-    
-   public void addItem(MenuItem item, int qty) {
-       double productPrice = qty * item.getPrice();
-       grandTotal += productPrice;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-       itemQty.add(qty);
-       menuItems.add(item); // Add item to menuItems list
+class Cart {
+   
+   public Registration registration;
+   
+   private ArrayList<String> items = new ArrayList<>();
+   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // list of all items from the menu item
+   private ArrayList<Integer> itemQty = new ArrayList<>(); 
+   private ArrayList<ArrayList<String>> orderHistory = new ArrayList<>(); // list of all past receipts
+   private ArrayList <Double> itemPrice = new ArrayList<>(); //list of price that the user added to cart
+   
+   private Scanner input = new Scanner(System.in); 
+   static double total = 0.0;
+   static double finalGrandTotal = 0.0;
+   static double finalVat = 0.0;
+   static String buyItem;
+  
+   //to access registration class
+   public Cart (Registration registration){
+       this.registration = registration;       
+   }
+   
+   public void addItem(MenuItem item, int qty) {
+      
+       double productPrice = qty * item.getPrice(); 
+       itemPrice.add(productPrice);
+       total += productPrice;
+       
+       itemQty.add(qty); 
+       menuItems.add(item); // I used this para once the user had too much update on their cart, it allows to keep track on updated items then print the new total
        items.add(qty + "x " + item.getName() + "\t@" + item.getPrice() + "\t\t" + productPrice);
        System.out.println("Added to cart!");
    }
     
    public void displayCart() {
-       System.out.println("\n--- Your Cart ---");
+       System.out.println("\n--------------- Your Cart ----------------");
        if (items.isEmpty()) {
            System.out.println("Cart is empty.");
        } else {
@@ -42,23 +60,28 @@ class Cart {
            FinalExamination.chooseActionInCart(this);
        }
    }
-    
-   
-       public void removeItem(){
  
+       public void removeItem(){
         System.out.print("\nWould you like to remove an item? (y/n): ");
-        String readRemove = input.nextLine();
-        char boolRemove = readRemove.charAt(0);
+        String boolRemove = input.nextLine();
         
-        if(boolRemove == 'y' || boolRemove == 'Y'){
-            System.out.print("Select a number to remove (from 0 up to last number): ");
-            removeItems = input.nextInt();
+        if(boolRemove.equalsIgnoreCase("Y")){
+            System.out.print("Select a number to remove (from 0 up to " + (items.size() - 1) + "): ");
+            int removeItems = input.nextInt();
             input.nextLine();
             
             //condition to user input
             if (removeItems >= 0 && removeItems < items.size()){
+                
+                //to update the total once the item is removed
+                double removeFromPrice =itemQty.get(removeItems) * menuItems.get(removeItems).getPrice();
+                total = total - removeFromPrice;
+                
+                //remove them from all lists
                 items.remove(removeItems);
-                //DISPLAY THIS once cart is empty
+                menuItems.remove(removeItems);
+                itemQty.remove(removeItems);
+                itemPrice.remove(removeItems);
                 
                 if(items.isEmpty()){
                     System.out.println("Your cart is empty! ");
@@ -69,98 +92,150 @@ class Cart {
                 System.out.println("Invalid. Try again.");
                 removeItem();
             }
-        }else if(boolRemove == 'n' || boolRemove == 'N'){
-            //dapat babalik sa choose action
-           //checkOutItem();
+        }else if(boolRemove.equalsIgnoreCase("N")){   
             FinalExamination.chooseActionInCart(this);
         } else {
             System.out.println("Invalid!");
         }
 
     }
- 
+       
    public void editItem(){
-       System.out.println("---NOTE: This can only edit quantity.---");
-       System.out.print("Enter index of the item you'd like to edit (0 to " + (items.size() - 1) + "): ");
+       System.out.println("\n---NOTE: This can only edit quantity.---");
+       System.out.print("\nEnter the number of an item that you'd like to edit (from 0 to " + (items.size() - 1) + "): ");
        int editIndexItem = input.nextInt();
         
        if(editIndexItem >= 0 && editIndexItem < items.size()){
-           System.out.print("Enter the new quantity");
+           System.out.print("Enter the new quantity: ");
            int editQty = input.nextInt();   
            
-           // Update grandTotal with the new price after adjusting quantity
+           // to update the new price once the user edits  
            double oldProductPrice = itemQty.get(editIndexItem) * menuItems.get(editIndexItem).getPrice();
            double newProductPrice = editQty * menuItems.get(editIndexItem).getPrice();
-           grandTotal += (newProductPrice - oldProductPrice);
+           total += (newProductPrice - oldProductPrice);
            
            itemQty.set(editIndexItem, editQty);
            String updatedItem = editQty + "x " + menuItems.get(editIndexItem).getName() 
                + "\t@" + menuItems.get(editIndexItem).getPrice() 
                + "\t\t" + newProductPrice;
            items.set(editIndexItem, updatedItem);
-           System.out.println("Updated Cart: " + items);
+           System.out.println("\nUpdated Cart: ");
+           confirmCart();
        } else {
            System.out.println("Invalid index. Try again.");
            editItem();
        }
    }
-    
+   
+   
    public void confirmCart(){
        System.out.println("Product \t\t\t Price");
        for (String itemList : items) {
            System.out.println(itemList);
        }
    }
-    
-   public void receipt(){
-       System.out.println("***************************************************");
-       System.out.println("\n\t\tMCBytes Restaurant");
-       System.out.println("\n***************************************************");
-        
-       System.out.println("User's name: " + Registration.getFirstName());
-       System.out.println("Address:" + );
-       System.out.println("Number: "+ );
-        
-       confirmCart();
-       System.out.println("***************************************************");
-       //System.out.println("Total: " + grandTotal); 
-       //vat - 0.12 x price
-       //grandTotal = vat + 
-       
-       double vat = grandTotal * 0.12;
-       double finalTotal = grandTotal + vat;
-
-       // Print the totals
-       System.out.printf("Total:\t\t%.2f\n", grandTotal);
-       System.out.printf("VAT (12%%):\t%.2f\n", vat);
-       System.out.printf("Grand Total:\t%.2f\n", finalTotal);
-
-       System.out.println("***************************************************");
-       System.out.println("\t\t\tThank you for dining with us!");
-   }
-
+   
    public void checkOutItem(){
-       System.out.print("Would you like to check out the items? ");
-       String readOrder = input.nextLine();
-       char boolOrder = readOrder.charAt(0);
-        
-       if(boolOrder == 'y' || boolOrder == 'Y'){
-           System.out.println("\n--Confirm your order--");
+       System.out.print("Would you like to check out the items? (y/n): ");
+       String boolOrder = input.nextLine();
+    
+       if(boolOrder.equalsIgnoreCase("Y")){
+           System.out.println("\n------------ ORDER CONFIRMATION -------------");
             
-           System.out.print("Would you like to buy the items? (y/n) ");
-           char buyItem = input.next().charAt(0);
+           System.out.print("Would you like to buy the items? (y/n):  ");    
+           buyItem = input.nextLine();
             
-           if(buyItem == 'y' || buyItem == 'Y'){
-               System.out.println("\nHere's your buy list!\n");
-               confirmCart();
+           if(buyItem.equalsIgnoreCase("Y")){
+               ArrayList<String> receiptItems = new ArrayList<>(items); // para masave yung receipt ng user's order
+               ArrayList<Double> priceItems = new ArrayList<>();
+                orderHistory.add(receiptItems); // to keep track on order history
+                finalGrandTotal = total; // save the total
+                finalVat = total * 0.12;
+               
+               // I cleared them para it will be removed on view cart option since the user already checked out
                receipt();
+               items.clear();
+
+               menuItems.clear();
+               itemQty.clear();
+               itemPrice.clear();
+               total = 0.0;
            } else {
                System.out.println("Invalid Option!");
            }
-       } else if (boolOrder == 'n' || boolOrder == 'N'){
+       } else if (boolOrder.equalsIgnoreCase("N")){
            FinalExamination.MainMenu(this);
        } else {
            System.out.println("Invalid option!");
        }
    }
+   
+   public void receipt(){
+       System.out.println("\n*****Here's your receipt!*****");
+       System.out.println("\n***************************************************");
+       System.out.println("\n\t\tMCBytes Restaurant");
+       System.out.println("\n***************************************************");
+
+       //to get the user info
+       System.out.println("\nUser's name: " + registration.getFirstName());
+       System.out.println("Address: " + registration.getAddress());
+       System.out.println("Number: " + registration.getPhoneNumber() + "\n");
+       System.out.println("Product \t\t Price");
+       for(String itemList: items){
+           System.out.println(itemList);
+       }
+
+       System.out.println("\n***************************************************");
+
+       double vat = total * 0.12;
+       double grandTotal = total + vat;
+       
+       itemPrice.add(grandTotal);
+       itemPrice.add(vat);
+       System.out.printf("\nTotal:\t\t%.2f\n", total);
+       System.out.printf("VAT (12%%):\t%.2f\n", vat);
+       System.out.printf("Grand Total:\t%.2f\n", grandTotal);
+
+       System.out.println("\n***************************************************");
+       System.out.println("\tThank you for dining with us!"); 
+       
+   }
+   
+    public void myOrders() {
+        if(orderHistory.isEmpty()){
+           System.out.println("You have no orders!");
+       } else if (buyItem == null){
+           System.out.println("Check out your items first!");
+
+       } else if (buyItem.equalsIgnoreCase("Y")) {
+            System.out.println("\n--------------- Your Cart ----------------");
+            
+            for (int i = 0; i < orderHistory.size(); i++) {
+            System.out.println("\nOrder #" + (i + 1) + ":");
+            System.out.println("Product \t\t\t Price");
+
+            double orderTotal = 0.0;
+
+            // Print each item in the order and calculate the order total
+            for (String itemList : orderHistory.get(i)) {
+                System.out.println(itemList);
+                
+                // Extract the price from the itemList string
+                String[] parts = itemList.split("\t+");
+                double itemPrice = Double.parseDouble(parts[parts.length - 1]);
+                orderTotal += itemPrice;
+            }
+           
+            double orderVAT = finalVat;
+            double grandTotal = orderTotal + orderVAT;
+            
+            System.out.printf("\nTotal:\t\t%.2f\n", orderTotal);
+            System.out.printf("VAT (12%%):\t%.2f\n", orderVAT);
+            System.out.printf("Grand Total:\t%.2f\n", grandTotal);
+
+           System.out.println("\n***************************************************");     
+       }        
+   }
+   }
+  
 }
