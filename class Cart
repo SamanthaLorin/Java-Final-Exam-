@@ -173,7 +173,7 @@ class Cart {
        System.out.println("\n***************************************************");
 
        //to get the user info
-       System.out.println("\nUser's name: " + registration.getFirstName());
+       System.out.println("\nName: " + registration.getFirstName());
        System.out.println("Address: " + registration.getAddress());
        System.out.println("Number: " + registration.getPhoneNumber() + "\n");
        System.out.println("Product \t\t Price");
