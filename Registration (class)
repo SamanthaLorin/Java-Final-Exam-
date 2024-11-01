@@ -11,8 +11,7 @@ package com.mycompany.finalexamination;
 public class Registration {
     private String firstName, lastName, email, pass, phoneNumber, address;
 
-    
-        public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String Address) {
+        public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String address) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.email = email;
@@ -20,7 +19,7 @@ public class Registration {
             this.phoneNumber = phoneNumber;
             this.address = address;
     }
-    
+
       public String getFirstName() {
         return firstName;
     }
@@ -46,4 +45,3 @@ public class Registration {
     }
     
 }
-
