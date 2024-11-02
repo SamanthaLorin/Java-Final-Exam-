@@ -9,15 +9,16 @@ package com.mycompany.finalexamination;
  * @author Samantha Lorin
  */
 public class Registration {
-    private String firstName, lastName, email, pass, phoneNumber, address;
+    private String firstName, lastName, email, pass, phoneNumber, address, bankDetails;
 
-        public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String address) {
+        public Registration(String firstName, String lastName, String email, String password, String phoneNumber, String address, String bankDetails) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.email = email;
             this.pass = password;
             this.phoneNumber = phoneNumber;
             this.address = address;
+            this.bankDetails = bankDetails;
     }
 
       public String getFirstName() {
@@ -44,4 +45,10 @@ public class Registration {
         return address;
     }
     
+    public String getBankDetails(){
+        return bankDetails;
+    }
+    public void setBankDetails(String bankDetails) {
+        this.bankDetails = bankDetails;
+    }
 }
