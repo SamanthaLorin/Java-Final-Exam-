@@ -69,7 +69,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         System.out.print("Address: ");
         address = input.nextLine();
         
-        
+        String bankDetails = bankAccount();
         
         if (users.contains(email)) {
             System.out.println("\nThis account is already registered. Please try logging in.");
@@ -78,7 +78,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         }
         
         // PARA MAKAPAG REGISTER ULIT SI USER (arraylist = add)
-        Registration newUser = new Registration(fname, lname, email, pass, pnumber, address);
+        Registration newUser = new Registration(fname, lname, email, pass, pnumber, address, bankDetails);
         users.add(newUser);
                 
         System.out.println("\nSign up Successful! You can now log in.");
@@ -126,7 +126,59 @@ static ArrayList<Registration> users = new ArrayList<>();
         // AFTER NG LOGIN TSAKA SIGNUP
         }
         
+    public static String bankAccount(){ 
+        Scanner input = new Scanner(System.in);
+        System.out.println("Bank Details: ");
+        System.out.println("\n[1] Debit / Credit Card");
+        System.out.println("[2] Gcash");
+        System.out.println("[3] Maya");
+        System.out.println("[4] None");
         
+        System.out.print("\nChoose a bank / e-wallet to link your account: ");
+        int bankOption =  input.nextInt();
+        input.nextLine();
+        String bankDetails = "";
+        
+        switch(bankOption){
+            case 1:    
+                System.out.print("Card Number: ");
+                String cardNum = input.nextLine();
+                
+                System.out.print("Expiry Date: ");
+                String expiryDate = input.nextLine();
+                
+                System.out.print("CVV: ");
+                int cvv = input.nextInt();
+                input.nextLine();
+                
+                System.out.print("Name on card: ");
+                String cardName = input.nextLine();
+                
+                bankDetails = "Card: " + cardNum + ", Expiry: " + expiryDate + ", CVV: " + cvv + ", Name: " + cardName;
+                break;       
+                
+            case 2:
+                System.out.print("Gcash Number: ");
+                String gcashNum = input.nextLine();
+                bankDetails = "Gcash: " + gcashNum;
+                
+                break;
+            
+            case 3:
+                System.out.print("Maya number: ");
+                String mayaNum = input.nextLine();
+                bankDetails = "Maya: " + mayaNum;
+                break;
+            case 4:
+                bankDetails = null;
+                break;
+        default:
+            System.out.println("Invalid option. No bank account linked.");
+            bankDetails = "None";
+            break;
+        }
+     return bankDetails;
+    }
     public static void OpenHomePage(Registration user){    
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
@@ -311,6 +363,10 @@ static ArrayList<Registration> users = new ArrayList<>();
     }
 
 }
+
+
+    
+
 
 
     
