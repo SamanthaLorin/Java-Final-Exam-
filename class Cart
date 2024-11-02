@@ -11,14 +11,17 @@ import java.util.Scanner;
  * @author Samantha Lorin
  */
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 class Cart {
    
    public Registration registration;
    
    private ArrayList<String> items = new ArrayList<>();
-   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // list ng mga items from the menu item
+   private ArrayList<MenuItem> menuItems = new ArrayList<>(); // list of all items from the menu item
    private ArrayList<Integer> itemQty = new ArrayList<>(); 
-   private ArrayList<ArrayList<String>> orderHistory = new ArrayList<>(); // list of past receipts
+   private ArrayList<ArrayList<String>> orderHistory = new ArrayList<>(); // list of all past receipts
    private ArrayList <Double> itemPrice = new ArrayList<>(); //list of price that the user added to cart
    
    private Scanner input = new Scanner(System.in); 
@@ -26,7 +29,8 @@ class Cart {
    static double finalGrandTotal = 0.0;
    static double finalVat = 0.0;
    static String buyItem;
-  
+   private int deliverMode;
+   static double vat = 0.0;
    //to access registration class
    public Cart (Registration registration){
        this.registration = registration;       
@@ -49,10 +53,11 @@ class Cart {
        if (items.isEmpty()) {
            System.out.println("Cart is empty.");
        } else {
-           System.out.println("Qty and Product \t Unit \t Total");
+           System.out.println("\nQty Product \t Unit \t Total");
            for(int i = 0; i < items.size(); i++){       
                System.out.println("[" + i + "]. "+ items.get(i));
            }
+           System.out.println("\n------------------------------------------");
            FinalExamination.chooseActionInCart(this);
        }
    }
@@ -69,9 +74,10 @@ class Cart {
             //condition to user input
             if (removeItems >= 0 && removeItems < items.size()){
                 
-                //to update the total once the item is removed
+                //to update the total and vat once the item is removed
                 double removeFromPrice =itemQty.get(removeItems) * menuItems.get(removeItems).getPrice();
                 total = total - removeFromPrice;
+                vat = vat - removeFromPrice;
                 
                 //remove them from all lists
                 items.remove(removeItems);
@@ -97,7 +103,7 @@ class Cart {
     }
        
    public void editItem(){
-       System.out.println("\n---NOTE: This can only edit quantity.---");
+       System.out.println("\n\t\t***NOTE*** \n\tThis can only edit quantity");
        System.out.print("\nEnter the number of an item that you'd like to edit (from 0 to " + (items.size() - 1) + "): ");
        int editIndexItem = input.nextInt();
         
@@ -109,13 +115,15 @@ class Cart {
            double oldProductPrice = itemQty.get(editIndexItem) * menuItems.get(editIndexItem).getPrice();
            double newProductPrice = editQty * menuItems.get(editIndexItem).getPrice();
            total += (newProductPrice - oldProductPrice);
+           //update vat as well to ensure precise printing
+           vat = total * 0.12; 
            
            itemQty.set(editIndexItem, editQty);
            String updatedItem = editQty + "x " + menuItems.get(editIndexItem).getName() 
                + "\t@" + menuItems.get(editIndexItem).getPrice() 
                + "\t\t" + newProductPrice;
            items.set(editIndexItem, updatedItem);
-           System.out.println("\nUpdated Cart: ");
+           System.out.println("\nUpdated Cart: \n");
            confirmCart();
        } else {
            System.out.println("Invalid index. Try again.");
@@ -133,41 +141,104 @@ class Cart {
    
    public void checkOutItem(){
        System.out.print("Would you like to check out the items? (y/n): ");
-       String boolOrder = input.nextLine();
+       String order = input.nextLine();
     
-       if(boolOrder.equalsIgnoreCase("Y")){
+       if(order.equalsIgnoreCase("Y")){
            System.out.println("\n------------ ORDER CONFIRMATION -------------");
             
-           System.out.print("Would you like to buy the items? (y/n):  ");    
+           System.out.print("\nWould you like to buy the items? (y/n):  ");    
            buyItem = input.nextLine();
-            
+           System.out.println("\n-----------------------------------------------");
+
            if(buyItem.equalsIgnoreCase("Y")){
                ArrayList<String> receiptItems = new ArrayList<>(items); // para masave yung receipt ng user's order
                ArrayList<Double> priceItems = new ArrayList<>();
                 orderHistory.add(receiptItems); // to keep track on order history
                 finalGrandTotal = total; // save the total
-                finalVat = total * 0.12;
-               
-               // I cleared them para it will be removed on view cart option since the user already checked out
-               receipt();
+                finalVat = finalGrandTotal * 0.12;
+              
+               modeOfPayment();
+                // I cleared them para it will be removed on view cart option since the user already checked out   
                items.clear();
-
                menuItems.clear();
                itemQty.clear();
                itemPrice.clear();
                total = 0.0;
+               vat = 0.0;
+           } else if (buyItem.equalsIgnoreCase("N")){    
+               FinalExamination.chooseActionInCart(this);
            } else {
                System.out.println("Invalid Option!");
            }
-       } else if (boolOrder.equalsIgnoreCase("N")){
+       } else if (order.equalsIgnoreCase("N")){
            FinalExamination.MainMenu(this);
        } else {
            System.out.println("Invalid option!");
        }
    }
    
-   public void receipt(){
-       System.out.println("\n*****Here's your receipt!*****");
+   public void modeOfPayment() {
+       System.out.println("\n[1] Cash on Delivery");
+       System.out.println("[2] Bank / e-wallet");
+       System.out.print("\nChoose your mode of payment: ");
+       int paymentMode = input.nextInt();
+       input.nextLine();
+       
+    if (paymentMode == 1) {
+        modeOfDelivery();
+    } else if (paymentMode == 2) {
+        if (registration.getBankDetails() != null && !registration.getBankDetails().isEmpty()) {
+            System.out.println("You have a linked bank account: " + registration.getBankDetails());
+            modeOfDelivery();
+        } else {
+            // to let user link an account
+            System.out.print("\nIt looks like you haven't linked any accounts. Would you like to link one now? (y/n): ");
+            String linkAcc = input.nextLine(); 
+
+            if (linkAcc.equalsIgnoreCase("Y")) {
+                //let user enter their bank details
+                String bankDetails = FinalExamination.bankAccount();
+                registration.setBankDetails(bankDetails); // Save the bank details
+                System.out.println("Bank account linked successfully: " + bankDetails);
+                modeOfDelivery(); 
+            } else if (linkAcc.equalsIgnoreCase("N")) {
+                System.out.println("No bank account linked.");
+                modeOfPayment(); 
+            } else {
+                System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                modeOfPayment(); 
+            }
+        }
+    } else {
+        System.out.println("Invalid Option. Try again.");
+        modeOfPayment(); 
+    }
+}
+   public void modeOfDelivery(){
+       //for delivery option
+       System.out.println("\n[1] Pick-up");
+       System.out.println("[2] Deliver");
+       System.out.print("\nChoose your mode of delivery: ");
+       deliverMode = input.nextInt();
+       
+       switch(deliverMode){
+           case 1:
+               System.out.println("\nYou have selected Pick-up.");
+               receipt();
+               break;
+               
+           case 2:
+               System.out.println("\nYou have selected Deliver."); 
+               receipt();
+               break;
+
+        default:
+            System.out.println("Invalid Option. Please try again.");
+            modeOfDelivery();
+            break;
+       }
+   }
+   public void receipt(){ 
        System.out.println("\n***************************************************");
        System.out.println("\n\t\tMCBytes Restaurant");
        System.out.println("\n***************************************************");
@@ -176,14 +247,14 @@ class Cart {
        System.out.println("\nName: " + registration.getFirstName());
        System.out.println("Address: " + registration.getAddress());
        System.out.println("Number: " + registration.getPhoneNumber() + "\n");
-       System.out.println("Product \t\t Price");
+       System.out.println("QTY \t\tProduct \t\tUnit \t\tPrice");
        for(String itemList: items){
            System.out.println(itemList);
        }
 
        System.out.println("\n***************************************************");
 
-       double vat = total * 0.12;
+       vat = total * 0.12;
        double grandTotal = total + vat;
        
        itemPrice.add(grandTotal);
@@ -191,7 +262,17 @@ class Cart {
        System.out.printf("\nTotal:\t\t%.2f\n", total);
        System.out.printf("VAT (12%%):\t%.2f\n", vat);
        System.out.printf("Grand Total:\t%.2f\n", grandTotal);
-
+       
+       if(deliverMode == 1){
+           System.out.println("");
+           System.out.println("\nDelivery Option: Deliver.");
+           System.out.println("Estimated delivery time: 20-30 minutes.");
+       } else if(deliverMode == 2){
+           System.out.println("Delivery Option: Pick-up");
+           System.out.println("Please visit our store to pick up your order. Our address is:");
+           System.out.println("143 Byte Street, Dasmarinas, 11024");
+           System.out.println("Store hours: Monday to Saturday, 8 AM to 7 PM");
+       }
        System.out.println("\n***************************************************");
        System.out.println("\tThank you for dining with us!"); 
        
@@ -204,7 +285,7 @@ class Cart {
            System.out.println("Check out your items first!");
 
        } else if (buyItem.equalsIgnoreCase("Y")) {
-            System.out.println("\n--------------- Your Cart ----------------");
+            System.out.println("\n--------------- Your Order/s ----------------");
             
             for (int i = 0; i < orderHistory.size(); i++) {
             System.out.println("\nOrder #" + (i + 1) + ":");
@@ -216,7 +297,7 @@ class Cart {
             for (String itemList : orderHistory.get(i)) {
                 System.out.println(itemList);
                 
-                // Extract the price from the itemList string
+                //it allows to get the price from the itemList string
                 String[] parts = itemList.split("\t+");
                 double itemPrice = Double.parseDouble(parts[parts.length - 1]);
                 orderTotal += itemPrice;
