@@ -9,16 +9,17 @@ package com.mycompany.finalexamination;
  * @author Samantha Lorin
  */
 public class MenuItem {
-    String name;
-    double price;
+    private String name;
+    private double price;
 
     public MenuItem(String name, double price) {
         this.name = name;
         this.price = price;
     }
 
+    @Override
     public String toString() {
-        return name + "\t\t\t" + price;
+        return String.format("%-30s %10.2f", name, price);
     }
 
     public double getPrice() {
