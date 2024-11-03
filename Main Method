@@ -1,14 +1,15 @@
 
+package com.mycompany.finalexamination;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class FinalExamination {
-  
+    
 static ArrayList<Registration> users = new ArrayList<>();
+static Scanner input = new Scanner(System.in); //inisahan ko na para hindi paulit-ulit gumawa ng scanner
 
     // MAIN METHOD 
     public static void main(String[] args) {
-        
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
         System.out.println("***********************************************************");
@@ -19,8 +20,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         // open() - ito yung unang makikita ni user bago yung menu.
         // need niya muna mag login/sign up bago makapasok sa system. 
         public static void Open() {
-        Scanner input = new Scanner(System.in);
-
+        
         System.out.println("[1] Login");
         System.out.println("[2] Sign up");
         
@@ -69,7 +69,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         System.out.print("Address: ");
         address = input.nextLine();
         
-        String bankDetails = bankAccount();
+        
         
         if (users.contains(email)) {
             System.out.println("\nThis account is already registered. Please try logging in.");
@@ -78,7 +78,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         }
         
         // PARA MAKAPAG REGISTER ULIT SI USER (arraylist = add)
-        Registration newUser = new Registration(fname, lname, email, pass, pnumber, address, bankDetails);
+        Registration newUser = new Registration(fname, lname, email, pass, pnumber, address);
         users.add(newUser);
                 
         System.out.println("\nSign up Successful! You can now log in.");
@@ -95,7 +95,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         System.out.print("Password: ");
         String password = input.nextLine();  
         
-        // ginaya ko lang yung sa ppt ni sir + pinadebug kay blackbox kasi ayaw niya ng .contains
+        // ginaya ko lang yung sa ppt ni sir
         Registration user = null;
         for (Registration signup : users) {
          
@@ -126,59 +126,7 @@ static ArrayList<Registration> users = new ArrayList<>();
         // AFTER NG LOGIN TSAKA SIGNUP
         }
         
-    public static String bankAccount(){ 
-        Scanner input = new Scanner(System.in);
-        System.out.println("Bank Details: ");
-        System.out.println("\n[1] Debit / Credit Card");
-        System.out.println("[2] Gcash");
-        System.out.println("[3] Maya");
-        System.out.println("[4] None");
         
-        System.out.print("\nChoose a bank / e-wallet to link your account: ");
-        int bankOption =  input.nextInt();
-        input.nextLine();
-        String bankDetails = "";
-        
-        switch(bankOption){
-            case 1:    
-                System.out.print("Card Number: ");
-                String cardNum = input.nextLine();
-                
-                System.out.print("Expiry Date: ");
-                String expiryDate = input.nextLine();
-                
-                System.out.print("CVV: ");
-                int cvv = input.nextInt();
-                input.nextLine();
-                
-                System.out.print("Name on card: ");
-                String cardName = input.nextLine();
-                
-                bankDetails = "Card: " + cardNum + ", Expiry: " + expiryDate + ", CVV: " + cvv + ", Name: " + cardName;
-                break;       
-                
-            case 2:
-                System.out.print("Gcash Number: ");
-                String gcashNum = input.nextLine();
-                bankDetails = "Gcash: " + gcashNum;
-                
-                break;
-            
-            case 3:
-                System.out.print("Maya number: ");
-                String mayaNum = input.nextLine();
-                bankDetails = "Maya: " + mayaNum;
-                break;
-            case 4:
-                bankDetails = null;
-                break;
-        default:
-            System.out.println("Invalid option. No bank account linked.");
-            bankDetails = "None";
-            break;
-        }
-     return bankDetails;
-    }
     public static void OpenHomePage(Registration user){    
         System.out.println("\n \n***********************************************************");
         System.out.println("\t\tWelcome to MCBytes Restaurant");
@@ -191,7 +139,6 @@ static ArrayList<Registration> users = new ArrayList<>();
     }
         // TO DISPLAY MAIN MENU 
         public static void MainMenu(Cart cart) {
-        Scanner input = new Scanner(System.in);
         System.out.println("\n[1] View Menu");
         System.out.println("[2] View Cart");
         System.out.println("[3] View My Orders");
@@ -221,8 +168,6 @@ static ArrayList<Registration> users = new ArrayList<>();
         }}
         
         public static void ViewMenuCategories(Cart cart) {
-        Scanner input = new Scanner(System.in);
-
         System.out.println("\n--- Choose an option ---");
         System.out.println("[1] Rice Meals");
         System.out.println("[2] Burger");
@@ -268,8 +213,8 @@ static ArrayList<Registration> users = new ArrayList<>();
         MenuItem[] burgers = {
             new MenuItem("Cheesy Burger", 160.00),
             new MenuItem("Spicy Fillet Burger", 220.00),
-            new MenuItem("Crispy Chicken Sandwich with Lettuce & Tomatoes Meal", 166.00),
-            new MenuItem("Quarter Pounder with Cheese, Lettuce & Tomatoes Meal", 271.00)
+            new MenuItem("Crispy Chicken Sandwich BLT", 166.00),
+            new MenuItem("Quarter Pounder B.L.T.", 271.00)
         };
         
         displayMenuItems(cart, burgers);
@@ -308,8 +253,6 @@ static ArrayList<Registration> users = new ArrayList<>();
         
         // TO LET THE USER CHOOSE A MEAL & TO ENTER A QUANTITY 
         public static void displayMenuItems(Cart cart, MenuItem[] items) {
-        Scanner input = new Scanner(System.in);
-
         System.out.println("\n--- Menu ---");
         for (int i = 0; i < items.length; i++) {
             System.out.println("[" + (i + 1) + "] " + items[i]);
@@ -334,8 +277,6 @@ static ArrayList<Registration> users = new ArrayList<>();
         }
 
     public static void chooseActionInCart(Cart cart){
-        Scanner input = new Scanner(System.in);
-
         System.out.println("\n[1] Edit my cart");
         System.out.println("[2] Remove an item in my cart");
         System.out.println("[3] Check out"); 
@@ -361,7 +302,36 @@ static ArrayList<Registration> users = new ArrayList<>();
         }
 
     }
-
+        
+        
+        /* MGA AAYUSIN
+        - GO BACK
+        - YUNG PRICE AND PRODUCT
+        - layout ng menu
+        
+        MGA GAGAWIN
+        - SEARCH
+        - LAGAY TOTAL NG PRICE KAPAG VINIEW YUNG CART (PER PRODUCT) check
+        - bakit nag error kapaag nagcancel mag bili tapos babalik //ewan
+        - ayus checkout validation //haha
+        - EDIT quantity
+        - SEARCH
+        - kapag nagremove dapat yung mga tototal is yung existing nalang
+        - error yung validation kasi
+        - total of items
+        
+        - hindi na didisplay
+        - gawa ng validation is empty sa mga remove check-out kineme
+    
+    
+    
+        - SA EDIT check
+    - dapat naka println check
+    
+    - total of items
+        
+        */
+        
 }
 
 
@@ -370,3 +340,4 @@ static ArrayList<Registration> users = new ArrayList<>();
 
 
     
+
